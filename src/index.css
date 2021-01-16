@@ -1,0 +1,28 @@
+
+.title {
+  font-family: sans-serif;
+  text-align: center;
+  margin-top: 0px;
+}
+
+.table-top-button {
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+.table-top-button button {
+  margin-right: 5px;
+}
+
+.p-datatable .p-datatable-tbody .p-datatable-emptymessage td {
+  text-align: center;
+}
+
+.confirmation-content {
+  display: flex;
+  align-items: center;
+}
+
+.confirmation-content i {
+  margin-right: 10px;
+}
