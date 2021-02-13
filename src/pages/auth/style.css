@@ -1,0 +1,41 @@
+
+.container {
+  width: 99vw;
+  height: 97vh;
+  background: #6C7A89;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center
+}
+  
+.box {
+  width: 400px;
+  height: 360px;
+  background: #fff;
+  border-radius: 10px;
+  -webkit-box-shadow: 9px 7px 5px rgba(50, 50, 50, 0.77);
+  -moz-box-shadow: 9px 7px 5px rgba(50, 50, 50, 0.77);
+  box-shadow: 9px 7px 5px rgba(50, 50, 50, 0.77);
+}
+
+.grid {
+  margin: 0px 30px 0px 30px;
+}
+
+.button {
+  margin-left: 38px;
+}
+
+.link {
+  margin: 0px 0px 10px 38px;
+  color: blue;
+}
+
+.link a {
+  text-decoration: none;
+}
+
+.message {
+  width: 750px;
+}

@@ -1,0 +1,17 @@
+
+.field-checkbox {
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.label-checkbox {
+  margin-right: 10px;
+}
+
+.icon-checkbox span:before {
+  content: "\e966";
+}
+
+.message {
+  width: 400px;
+}
