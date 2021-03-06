@@ -7,7 +7,7 @@ import ListMusics from '../pages/musics/ListMusics'
 import DeletedMusics from '../pages/musics/deteledMusic'
 import AuthenticationGuard from './AuthenticationGuard'
 
-const Routes = (props) => {
+export default function Routes() {
 
   return (
     <BrowserRouter>
@@ -20,5 +20,3 @@ const Routes = (props) => {
     </BrowserRouter>
   )
 }
-
-export default Routes

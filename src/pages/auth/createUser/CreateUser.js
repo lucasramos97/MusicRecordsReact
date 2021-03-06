@@ -6,13 +6,11 @@ import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import { Checkbox } from 'primereact/checkbox';
 import AuthService from '../services/AuthService';
-import { USER_CREATED_SUCCESSFULLY } from '../../../utils/Consts'
 import ValidatorUtils from '../../../utils/ValidatorUtils';
 import StringUtils from '../../../utils/StringUtils';
-import BehaviorSubjectService from '../../../services/BehaviorSubjectService';
 import './style.css'
 
-const CreateUser = () => {
+export default function CreateUser(props) {
 
   const [user, setUser] = useState({
     name: '',
@@ -39,7 +37,6 @@ const CreateUser = () => {
   const [loader, setLoader] = useState(false)
   const msgs = useRef(null)
   const authService = new AuthService()
-  const behaviorSubjectService = new BehaviorSubjectService()
   const validatorUtils = new ValidatorUtils()
   const stringUtils = new StringUtils()
 
@@ -47,28 +44,28 @@ const CreateUser = () => {
     clearAllInputFieldsRequired()
   }, [])
 
-  const sendMessage = (message) => {
+  function sendMessage(message) {
     msgs.current.state.messages = []
     msgs.current.show(message)
   }
 
-  const createUser = () => {
+  function createUser() {
     if (validFields()) {
       setLoader(true)
       authService.create(user).then(() => {
         setLoader(false)
-        behaviorSubjectService.sendMessage(USER_CREATED_SUCCESSFULLY);
-      }).catch(res => {
+        props.conclusion()
+      }).catch(error => {
         setLoader(false)
         sendMessage({
           severity: 'error', summary: 'Error',
-          detail: res.data.message, sticky: true
+          detail: error.response.data.message, sticky: true
         })
       })
     }
   }
 
-  const validFields = () => {
+  function validFields() {
     let valid = true
 
     for (let [key, value] of Object.entries(user)) {
@@ -106,16 +103,16 @@ const CreateUser = () => {
     return valid
   }
 
-  const addInputFieldRequired = (field) => {
+  function addInputFieldRequired(field) {
     let capitalizedField = stringUtils.capitalizeField(field);
     changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid');
   }
 
-  const clearInputFieldRequired = (field) => {
+  function clearInputFieldRequired(field) {
     changeTextFieldRequired(field, '', '');
   }
 
-  const changeTextFieldRequired = (field, value, cssClass) => {
+  function changeTextFieldRequired(field, value, cssClass) {
     setRequiredFields(prevState => {
       return { ...prevState, [`${field}`]: value }
     })
@@ -124,14 +121,14 @@ const CreateUser = () => {
     })
   }
 
-  const clearAllInputFieldsRequired = () => {
+  function clearAllInputFieldsRequired() {
     for (let key of Object.keys(user)) {
       clearInputFieldRequired(key);
     }
     clearInputFieldRequired('confirmPassword')
   }
 
-  const seePasswords = (checked) => {
+  function seePasswords(checked) {
 
     setSeePasswordsChecked(checked)
     let passwordCreate = document.getElementById('password')
@@ -152,7 +149,7 @@ const CreateUser = () => {
 
       <div className="card">
 
-        <div className="message">
+        <div style={{ width: '400px' }}>
           <Messages ref={msgs} />
         </div>
 
@@ -249,5 +246,3 @@ const CreateUser = () => {
   )
 
 }
-
-export default CreateUser

@@ -3,7 +3,7 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import AuthService from '../pages/auth/services/AuthService'
 
-const AuthenticationGuard = ({ component: Component, ...rest }) => {
+export default function AuthenticationGuard({ component: Component, ...rest }) {
 
   const authService = new AuthService()
 
@@ -21,7 +21,4 @@ const AuthenticationGuard = ({ component: Component, ...rest }) => {
       }}
     />
   )
-
 }
-
-export default AuthenticationGuard

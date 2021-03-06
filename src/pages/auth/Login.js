@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Redirect } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import { Messages } from 'primereact/messages'
 import { InputText } from 'primereact/inputtext'
@@ -8,13 +8,13 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import BehaviorSubjectService from '../../services/BehaviorSubjectService'
 import AuthService from './services/AuthService'
-import { USER_CREATED_SUCCESSFULLY, AUTHENTICATED_ERROR } from '../../utils/Consts'
+import { AUTHENTICATED_ERROR } from '../../utils/Consts'
 import ValidatorUtils from '../../utils/ValidatorUtils'
 import StringUtils from '../../utils/StringUtils'
 import './style.css'
 import CreateUser from './createUser/CreateUser'
 
-const Login = (props) => {
+export default function Login() {
 
   const [user, setUser] = useState({
     email: '',
@@ -34,7 +34,8 @@ const Login = (props) => {
   const [loader, setLoader] = useState(false)
   const [displayCreateUser, setDisplayCreateUser] = useState(false)
   const msgs = useRef(null)
-  
+  const history = useHistory()
+
   const authService = new AuthService()
   const behaviorSubjectService = new BehaviorSubjectService()
   const validatorUtils = new ValidatorUtils()
@@ -44,15 +45,8 @@ const Login = (props) => {
     listenMessages()
   }, [])
 
-  const listenMessages = () => {
+  function listenMessages() {
     behaviorSubjectService.listenMessage().subscribe(message => {
-      if (message === USER_CREATED_SUCCESSFULLY) {
-        setDisplayCreateUser(false)
-        sendMessage({
-          severity: 'success', summary: 'Success',
-          detail: 'User created successfully!', sticky: true
-        })
-      }
       if (message.startsWith(AUTHENTICATED_ERROR)) {
         let errorMessage = message.substr(AUTHENTICATED_ERROR.length);
         if (errorMessage !== 'undefined') {
@@ -70,12 +64,20 @@ const Login = (props) => {
     })
   }
 
-  const sendMessage = (message) => {
+  function conclusionCreateUser() {
+    setDisplayCreateUser(false)
+    sendMessage({
+      severity: 'success', summary: 'Success',
+      detail: 'User created successfully!', sticky: true
+    })
+  }
+
+  function sendMessage(message) {
     msgs.current.state.messages = []
     msgs.current.show(message)
   }
 
-  const loginUser = () => {
+  function loginUser() {
     if (validFields()) {
       setLoader(true)
       authService.logout()
@@ -85,11 +87,11 @@ const Login = (props) => {
         authService.setToken(res.data.message)
         authService.setUsername(res.data.username)
         authService.setExpiredToken(false)
-        return <Redirect to={{ pathname: '/musics', state: { from: props.location } }} />
-      }).catch(res => {
+        history.push('/musics')
+      }).catch(error => {
         setLoader(false)
-        let errorMessage = res.data.message
-        if (res.status !== 0) {
+        let errorMessage = error.response.data.message
+        if (error.response.status !== 0) {
           sendMessage({
             severity: 'error', summary: 'Error',
             detail: errorMessage, sticky: true
@@ -104,7 +106,7 @@ const Login = (props) => {
     }
   }
 
-  const validFields = () => {
+  function validFields() {
     let valid = true
 
     for (let [key, value] of Object.entries(user)) {
@@ -127,16 +129,16 @@ const Login = (props) => {
     return valid
   }
 
-  const addInputFieldRequired = (field) => {
+  function addInputFieldRequired(field) {
     let capitalizedField = stringUtils.capitalizeField(field);
     changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid');
   }
 
-  const clearInputFieldRequired = (field) => {
+  function clearInputFieldRequired(field) {
     changeTextFieldRequired(field, '', '')
   }
 
-  const changeTextFieldRequired = (field, value, cssClass) => {
+  function changeTextFieldRequired(field, value, cssClass) {
     setRequiredFields(prevState => {
       return { ...prevState, [`${field}`]: value }
     })
@@ -145,11 +147,11 @@ const Login = (props) => {
     })
   }
 
-  const showCreateUser = () => {
+  function showCreateUser() {
     setDisplayCreateUser(true)
   }
 
-  const hideCreateEditMusic = () => {
+  function hideCreateEditMusic() {
     setDisplayCreateUser(false)
   }
 
@@ -157,7 +159,7 @@ const Login = (props) => {
     <div>
       <div className="container">
 
-        <div className="message">
+        <div style={{ width: '750px' }}>
           <Messages ref={msgs} />
         </div>
 
@@ -215,7 +217,7 @@ const Login = (props) => {
                 <Button onClick={loginUser} label="Login" disabled={loader} icon="pi pi-sign-in" iconPos="right" />
               </div>
             </div>
-            {loader && <div className="loader" style={{ marginTop: '10px' }}></div>}
+            {loader && <div className="loader" style={{ marginTop: '20px' }}></div>}
           </div>
 
         </div>
@@ -223,12 +225,9 @@ const Login = (props) => {
 
       <Dialog header="Create User" visible={displayCreateUser} style={{ width: '35vw' }}
         onHide={hideCreateEditMusic}>
-        <CreateUser />
+        <CreateUser conclusion={conclusionCreateUser} />
       </Dialog>
 
     </div>
   )
-
 }
-
-export default Login

@@ -9,21 +9,11 @@ import { InputNumber } from 'primereact/inputnumber'
 import StringUtils from '../../../utils/StringUtils'
 import './style.css'
 import MusicService from '../services/MusicService'
-import BehaviorSubjectService from '../../../services/BehaviorSubjectService'
-import { UPDATE_MUSIC_LIST } from '../../../utils/Consts'
 import ValidatorUtils from '../../../utils/ValidatorUtils'
 
-const CreateEditMusic = (props) => {
+export default function CreateEditMusic(props) {
 
-  const [music, setMusic] = useState({
-    id: null,
-    title: '',
-    artist: '',
-    launchDate: '',
-    duration: '',
-    viewsNumber: null,
-    feat: false
-  })
+  const [music, setMusic] = useState({})
 
   const [requiredStyle, setRequiredStyle] = useState({
     title: '',
@@ -42,30 +32,30 @@ const CreateEditMusic = (props) => {
   const [loader, setLoader] = useState(false)
 
   const msgs = useRef(null)
-  const fieldsNotRequired = ['viewsNumber', 'feat']
+  const fieldsNotRequired = ['id', 'viewsNumber', 'feat']
   const musicService = new MusicService()
-  const behaviorSubjectService = new BehaviorSubjectService()
   const validatorUtils = new ValidatorUtils()
+  const stringUtils = new StringUtils()
 
   useEffect(() => {
     clearAllInputFieldsRequired()
     setMusic(props.musicEdit)
   }, [])
 
-  const clearAllInputFieldsRequired = () => {
+  function clearAllInputFieldsRequired() {
     for (let key of Object.keys(music)) {
-      clearInputFieldRequired(key);
+      clearInputFieldRequired(key)
     }
   }
 
-  const validFields = () => {
+  function validFields() {
 
     let valid = true
 
     for (let [key, value] of Object.entries(music)) {
       if (!value && fieldsNotRequired.indexOf(key) === -1) {
         addInputFieldRequired(key)
-        valid = false;
+        valid = false
       } else {
         clearInputFieldRequired(key)
       }
@@ -82,12 +72,12 @@ const CreateEditMusic = (props) => {
     return valid
   }
 
-  const addInputFieldRequired = (field) => {
-    let capitalizedField = StringUtils.capitalizeField(field)
+  function addInputFieldRequired(field) {
+    let capitalizedField = stringUtils.capitalizeField(field)
     changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid')
   }
 
-  const changeTextFieldRequired = (field, value, cssClass) => {
+  function changeTextFieldRequired(field, value, cssClass) {
     setRequiredFields(prevState => {
       return { ...prevState, [`${field}`]: value }
     })
@@ -96,16 +86,40 @@ const CreateEditMusic = (props) => {
     })
   }
 
-  const clearInputFieldRequired = (field) => {
-    changeTextFieldRequired(field, '', '');
+  function clearInputFieldRequired(field) {
+    changeTextFieldRequired(field, '', '')
   }
 
-  const sendMessage = (message) => {
+  function handleChangeTitle(event) {
+    setMusic({ ...music, title: event.target.value })
+  }
+
+  function handleChangeArtist(event) {
+    setMusic({ ...music, artist: event.target.value })
+  }
+
+  function handleChangeLaunchDate(event) {
+    setMusic({ ...music, launchDate: event.target.value })
+  }
+
+  function handleChangeDuration(event) {
+    setMusic({ ...music, duration: event.target.value })
+  }
+
+  function handleChangeViewsNumber(event) {
+    setMusic({ ...music, viewsNumber: event.value })
+  }
+
+  function handleChangeFeat(event) {
+    setMusic({ ...music, feat: event.target.value })
+  }
+
+  function sendMessage(message) {
     msgs.current.state.messages = []
     msgs.current.show(message)
   }
 
-  const editMusic = () => {
+  function editMusic() {
     setLoader(true)
     musicService.edit(music).then(() => {
       setLoader(false)
@@ -113,17 +127,17 @@ const CreateEditMusic = (props) => {
         severity: 'success', summary: 'Success',
         detail: 'Music edited successfully!', sticky: true
       })
-      behaviorSubjectService.sendMessage(UPDATE_MUSIC_LIST);
-    }).catch(res => {
+      props.conclusion()
+    }).catch(error => {
       setLoader(false)
       sendMessage({
         severity: 'error', summary: 'Error',
-        detail: res.error.message, sticky: true
+        detail: error.response.data.message, sticky: true
       })
     })
   }
 
-  const saveMusic = () => {
+  function saveMusic() {
     setLoader(true)
     musicService.save(music).then(() => {
       setLoader(false)
@@ -131,23 +145,31 @@ const CreateEditMusic = (props) => {
         severity: 'success', summary: 'Success',
         detail: 'Music added successfully!', sticky: true
       })
-      behaviorSubjectService.sendMessage(UPDATE_MUSIC_LIST);
-      setMusic({})
-    }).catch(res => {
+      props.conclusion()
+      setMusic({
+        id: null,
+        title: '',
+        artist: '',
+        launchDate: '',
+        duration: '',
+        viewsNumber: null,
+        feat: false
+      })
+    }).catch(error => {
       setLoader(false)
       sendMessage({
         severity: 'error', summary: 'Error',
-        detail: res.error.message, sticky: true
+        detail: error.response.data.message, sticky: true
       })
     })
   }
 
-  const saveOrEditMusic = () => {
+  function saveOrEditMusic() {
     if (validFields()) {
-      if (music.id) {
-        editMusic();
+      if (music.id) { 
+        editMusic()
       } else {
-        saveMusic();
+        saveMusic()
       }
     }
   }
@@ -165,12 +187,8 @@ const CreateEditMusic = (props) => {
               <div className="p-fluid">
                 <label htmlFor="title" className="p-d-block">Title</label>
                 <div className="p-field form-input">
-                  <InputText id="title" value={music.title}
-                    onChange={e => {
-                      setMusic(prevState => {
-                        return { ...prevState, title: e.target.value }
-                      })
-                    }}
+                  <InputText id="title" value={music.title || ''}
+                    onChange={handleChangeTitle}
                     aria-describedby="title-help" className={requiredStyle['title']} />
                 </div>
                 <small id="title-help" className={requiredStyle['title']}>{requiredFields['title']}</small>
@@ -183,12 +201,8 @@ const CreateEditMusic = (props) => {
               <div className="p-fluid form-field">
                 <label htmlFor="artist" className="p-d-block">Artist</label>
                 <div className="p-field form-input">
-                  <InputText id="artist" value={music.artist}
-                    onChange={e => {
-                      setMusic(prevState => {
-                        return { ...prevState, artist: e.target.value }
-                      })
-                    }}
+                  <InputText id="artist" value={music.artist || ''}
+                    onChange={handleChangeArtist}
                     aria-describedby="artist-help" className={requiredStyle['artist']} />
                 </div>
                 <small id="artist-help" className={requiredStyle['artist']}>{requiredFields['artist']}</small>
@@ -202,12 +216,8 @@ const CreateEditMusic = (props) => {
               <div className="p-fluid form-field">
                 <label htmlFor="launchDate" className="p-d-block">Launch Date</label>
                 <div className="p-field form-input">
-                  <InputMask id="launchDate" value={music.launchDate} mask="99/99/9999"
-                    onChange={e => {
-                      setMusic(prevState => {
-                        return { ...prevState, launchDate: e.value }
-                      })
-                    }}
+                  <InputMask id="launchDate" value={music.launchDate || ''} mask="99/99/9999"
+                    onChange={handleChangeLaunchDate}
                     aria-describedby="launchDate-help" className={requiredStyle['launchDate']} />
                 </div>
                 <small id="launchDate-help" className={requiredStyle['launchDate']}>{requiredFields['launchDate']}</small>
@@ -218,12 +228,8 @@ const CreateEditMusic = (props) => {
               <div className="p-fluid form-field">
                 <label htmlFor="duration" className="p-d-block">Duration</label>
                 <div className="p-field form-input">
-                  <InputMask id="duration" value={music.duration} mask="99:99"
-                    onChange={e => {
-                      setMusic(prevState => {
-                        return { ...prevState, duration: e.value }
-                      })
-                    }}
+                  <InputMask id="duration" value={music.duration || ''} mask="99:99"
+                    onChange={handleChangeDuration}
                     aria-describedby="duration-help" className={requiredStyle['duration']} />
                 </div>
                 <small id="duration-help" className={requiredStyle['duration']}>{requiredFields['duration']}</small>
@@ -238,12 +244,8 @@ const CreateEditMusic = (props) => {
               <div className="p-fluid form-field">
                 <label htmlFor="viewsNumber" className="p-d-block">Views Number</label>
                 <div className="p-field form-input">
-                  <InputNumber id="viewsNumber" value={music.viewsNumber}
-                    onChange={e => {
-                      setMusic(prevState => {
-                        return { ...prevState, viewsNumber: e.value }
-                      })
-                    }}
+                  <InputNumber id="viewsNumber" value={music.viewsNumber || null}
+                    onChange={handleChangeViewsNumber}
                     aria-describedby="viewsNumber-help" className={requiredStyle['viewsNumber']} />
                 </div>
                 <small id="viewsNumber-help" className={requiredStyle['viewsNumber']}>{requiredFields['viewsNumber']}</small>
@@ -256,21 +258,13 @@ const CreateEditMusic = (props) => {
                 <div className="p-formgroup-inline form-radio">
                   <div className="p-field-checkbox">
                     <RadioButton inputId="feat-yes" name="feat-yes" value={true}
-                      onChange={e => {
-                        setMusic(prevState => {
-                          return { ...prevState, feat: e.value }
-                        })
-                      }}
+                      onChange={handleChangeFeat}
                       checked={music.feat} />
                     <label htmlFor="feat-yes">Yes</label>
                   </div>
                   <div className="p-field-checkbox">
                     <RadioButton inputId="feat-no" name="feat-no" value={false}
-                      onChange={e => {
-                        setMusic(prevState => {
-                          return { ...prevState, feat: e.value }
-                        })
-                      }}
+                      onChange={handleChangeFeat}
                       checked={!music.feat} />
                     <label htmlFor="feat-no">No</label>
                   </div>
@@ -291,12 +285,9 @@ const CreateEditMusic = (props) => {
               icon="pi pi-save" />
           </div>
         </div>
-        {loader && <div className="loader" style={{ marginTop: '30', marginRight: '0', marginBottom: '0', marginLeft: '20' }}></div>}
+        {loader && <div className="loader" style={{ marginTop: '20px', marginLeft: '20px' }}></div>}
       </div>
 
     </div>
   )
-
 }
-
-export default CreateEditMusic
