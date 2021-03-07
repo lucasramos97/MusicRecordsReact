@@ -1,11 +1,9 @@
 import Routes from './routes/routes'
 
-function App() {
+export default function App() {
   return (
     <div>
       <Routes />
     </div>
   )
 }
-
-export default App

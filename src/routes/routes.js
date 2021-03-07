@@ -4,7 +4,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import Login from '../pages/auth/Login'
 import ListMusics from '../pages/musics/ListMusics'
-import DeletedMusics from '../pages/musics/deteledMusic'
+import DeletedMusics from '../pages/musics/deteledMusic/DeteledMusic'
 import AuthenticationGuard from './AuthenticationGuard'
 
 export default function Routes() {

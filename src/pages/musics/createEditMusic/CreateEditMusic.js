@@ -1,15 +1,18 @@
 
 import React, { useState, useEffect, useRef } from 'react'
+
 import { InputText } from 'primereact/inputtext'
 import { Messages } from 'primereact/messages'
 import { Button } from 'primereact/button'
 import { RadioButton } from 'primereact/radiobutton'
 import { InputMask } from 'primereact/inputmask'
 import { InputNumber } from 'primereact/inputnumber'
+
 import StringUtils from '../../../utils/StringUtils'
-import './style.css'
 import MusicService from '../services/MusicService'
 import ValidatorUtils from '../../../utils/ValidatorUtils'
+
+import './style.css'
 
 export default function CreateEditMusic(props) {
 
@@ -32,10 +35,12 @@ export default function CreateEditMusic(props) {
   const [loader, setLoader] = useState(false)
 
   const msgs = useRef(null)
-  const fieldsNotRequired = ['id', 'viewsNumber', 'feat']
+
   const musicService = new MusicService()
   const validatorUtils = new ValidatorUtils()
   const stringUtils = new StringUtils()
+
+  const fieldsNotRequired = ['id', 'viewsNumber', 'feat']
 
   useEffect(() => {
     clearAllInputFieldsRequired()
@@ -166,7 +171,7 @@ export default function CreateEditMusic(props) {
 
   function saveOrEditMusic() {
     if (validFields()) {
-      if (music.id) { 
+      if (music.id) {
         editMusic()
       } else {
         saveMusic()
@@ -177,106 +182,103 @@ export default function CreateEditMusic(props) {
   return (
     <div>
 
-      <form>
-        <div className="card">
+      <div className="card">
 
-          <Messages ref={msgs} />
+        <Messages ref={msgs} />
 
-          <div className="p-grid">
-            <div className="p-col-12">
-              <div className="p-fluid">
-                <label htmlFor="title" className="p-d-block">Title</label>
-                <div className="p-field form-input">
-                  <InputText id="title" value={music.title || ''}
-                    onChange={handleChangeTitle}
-                    aria-describedby="title-help" className={requiredStyle['title']} />
-                </div>
-                <small id="title-help" className={requiredStyle['title']}>{requiredFields['title']}</small>
+        <div className="p-grid">
+          <div className="p-col-12">
+            <div className="p-fluid">
+              <label htmlFor="title" className="p-d-block">Title</label>
+              <div className="p-field form-input">
+                <InputText id="title" value={music.title || ''}
+                  onChange={handleChangeTitle}
+                  aria-describedby="title-help" className={requiredStyle['title']} />
               </div>
+              <small id="title-help" className={requiredStyle['title']}>{requiredFields['title']}</small>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-grid">
+          <div className="p-col-12">
+            <div className="p-fluid form-field">
+              <label htmlFor="artist" className="p-d-block">Artist</label>
+              <div className="p-field form-input">
+                <InputText id="artist" value={music.artist || ''}
+                  onChange={handleChangeArtist}
+                  aria-describedby="artist-help" className={requiredStyle['artist']} />
+              </div>
+              <small id="artist-help" className={requiredStyle['artist']}>{requiredFields['artist']}</small>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-grid">
+
+          <div className="p-col-6">
+            <div className="p-fluid form-field">
+              <label htmlFor="launchDate" className="p-d-block">Launch Date</label>
+              <div className="p-field form-input">
+                <InputMask id="launchDate" value={music.launchDate || ''} mask="99/99/9999"
+                  onChange={handleChangeLaunchDate}
+                  aria-describedby="launchDate-help" className={requiredStyle['launchDate']} />
+              </div>
+              <small id="launchDate-help" className={requiredStyle['launchDate']}>{requiredFields['launchDate']}</small>
             </div>
           </div>
 
-          <div className="p-grid">
-            <div className="p-col-12">
-              <div className="p-fluid form-field">
-                <label htmlFor="artist" className="p-d-block">Artist</label>
-                <div className="p-field form-input">
-                  <InputText id="artist" value={music.artist || ''}
-                    onChange={handleChangeArtist}
-                    aria-describedby="artist-help" className={requiredStyle['artist']} />
-                </div>
-                <small id="artist-help" className={requiredStyle['artist']}>{requiredFields['artist']}</small>
+          <div className="p-col-6">
+            <div className="p-fluid form-field">
+              <label htmlFor="duration" className="p-d-block">Duration</label>
+              <div className="p-field form-input">
+                <InputMask id="duration" value={music.duration || ''} mask="99:99"
+                  onChange={handleChangeDuration}
+                  aria-describedby="duration-help" className={requiredStyle['duration']} />
               </div>
+              <small id="duration-help" className={requiredStyle['duration']}>{requiredFields['duration']}</small>
             </div>
-          </div>
-
-          <div className="p-grid">
-
-            <div className="p-col-6">
-              <div className="p-fluid form-field">
-                <label htmlFor="launchDate" className="p-d-block">Launch Date</label>
-                <div className="p-field form-input">
-                  <InputMask id="launchDate" value={music.launchDate || ''} mask="99/99/9999"
-                    onChange={handleChangeLaunchDate}
-                    aria-describedby="launchDate-help" className={requiredStyle['launchDate']} />
-                </div>
-                <small id="launchDate-help" className={requiredStyle['launchDate']}>{requiredFields['launchDate']}</small>
-              </div>
-            </div>
-
-            <div className="p-col-6">
-              <div className="p-fluid form-field">
-                <label htmlFor="duration" className="p-d-block">Duration</label>
-                <div className="p-field form-input">
-                  <InputMask id="duration" value={music.duration || ''} mask="99:99"
-                    onChange={handleChangeDuration}
-                    aria-describedby="duration-help" className={requiredStyle['duration']} />
-                </div>
-                <small id="duration-help" className={requiredStyle['duration']}>{requiredFields['duration']}</small>
-              </div>
-            </div>
-
-          </div>
-
-          <div className="p-grid">
-
-            <div className="p-col-6">
-              <div className="p-fluid form-field">
-                <label htmlFor="viewsNumber" className="p-d-block">Views Number</label>
-                <div className="p-field form-input">
-                  <InputNumber id="viewsNumber" value={music.viewsNumber || null}
-                    onChange={handleChangeViewsNumber}
-                    aria-describedby="viewsNumber-help" className={requiredStyle['viewsNumber']} />
-                </div>
-                <small id="viewsNumber-help" className={requiredStyle['viewsNumber']}>{requiredFields['viewsNumber']}</small>
-              </div>
-            </div>
-
-            <div className="p-col-6">
-              <div className="p-fluid form-field">
-                <label>Feat</label>
-                <div className="p-formgroup-inline form-radio">
-                  <div className="p-field-checkbox">
-                    <RadioButton inputId="feat-yes" name="feat-yes" value={true}
-                      onChange={handleChangeFeat}
-                      checked={music.feat} />
-                    <label htmlFor="feat-yes">Yes</label>
-                  </div>
-                  <div className="p-field-checkbox">
-                    <RadioButton inputId="feat-no" name="feat-no" value={false}
-                      onChange={handleChangeFeat}
-                      checked={!music.feat} />
-                    <label htmlFor="feat-no">No</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
 
         </div>
 
-      </form>
+        <div className="p-grid">
+
+          <div className="p-col-6">
+            <div className="p-fluid form-field">
+              <label htmlFor="viewsNumber" className="p-d-block">Views Number</label>
+              <div className="p-field form-input">
+                <InputNumber id="viewsNumber" value={music.viewsNumber || null}
+                  onChange={handleChangeViewsNumber}
+                  aria-describedby="viewsNumber-help" className={requiredStyle['viewsNumber']} />
+              </div>
+              <small id="viewsNumber-help" className={requiredStyle['viewsNumber']}>{requiredFields['viewsNumber']}</small>
+            </div>
+          </div>
+
+          <div className="p-col-6">
+            <div className="p-fluid form-field">
+              <label>Feat</label>
+              <div className="p-formgroup-inline form-radio">
+                <div className="p-field-checkbox">
+                  <RadioButton inputId="feat-yes" name="feat-yes" value={true}
+                    onChange={handleChangeFeat}
+                    checked={music.feat} />
+                  <label htmlFor="feat-yes">Yes</label>
+                </div>
+                <div className="p-field-checkbox">
+                  <RadioButton inputId="feat-no" name="feat-no" value={false}
+                    onChange={handleChangeFeat}
+                    checked={!music.feat} />
+                  <label htmlFor="feat-no">No</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
 
       <div className="p-grid">
         <div className="p-col-2">

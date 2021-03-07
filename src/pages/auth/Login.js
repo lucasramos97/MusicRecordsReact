@@ -6,13 +6,15 @@ import { Messages } from 'primereact/messages'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
+
 import BehaviorSubjectService from '../../services/BehaviorSubjectService'
 import AuthService from './services/AuthService'
-import { AUTHENTICATED_ERROR } from '../../utils/Consts'
 import ValidatorUtils from '../../utils/ValidatorUtils'
 import StringUtils from '../../utils/StringUtils'
-import './style.css'
 import CreateUser from './createUser/CreateUser'
+import { AUTHENTICATED_ERROR } from '../../utils/Consts'
+
+import './style.css'
 
 export default function Login() {
 
@@ -33,7 +35,9 @@ export default function Login() {
 
   const [loader, setLoader] = useState(false)
   const [displayCreateUser, setDisplayCreateUser] = useState(false)
+
   const msgs = useRef(null)
+
   const history = useHistory()
 
   const authService = new AuthService()
@@ -48,7 +52,7 @@ export default function Login() {
   function listenMessages() {
     behaviorSubjectService.listenMessage().subscribe(message => {
       if (message.startsWith(AUTHENTICATED_ERROR)) {
-        let errorMessage = message.substr(AUTHENTICATED_ERROR.length);
+        let errorMessage = message.substr(AUTHENTICATED_ERROR.length)
         if (errorMessage !== 'undefined') {
           sendMessage({
             severity: 'error', summary: 'Error',
@@ -111,10 +115,10 @@ export default function Login() {
 
     for (let [key, value] of Object.entries(user)) {
       if (!value) {
-        addInputFieldRequired(key);
-        valid = false;
+        addInputFieldRequired(key)
+        valid = false
       } else {
-        clearInputFieldRequired(key);
+        clearInputFieldRequired(key)
       }
     }
 
@@ -130,8 +134,8 @@ export default function Login() {
   }
 
   function addInputFieldRequired(field) {
-    let capitalizedField = stringUtils.capitalizeField(field);
-    changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid');
+    let capitalizedField = stringUtils.capitalizeField(field)
+    changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid')
   }
 
   function clearInputFieldRequired(field) {

@@ -4,10 +4,12 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Messages } from 'primereact/messages'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
-import { Checkbox } from 'primereact/checkbox';
-import AuthService from '../services/AuthService';
-import ValidatorUtils from '../../../utils/ValidatorUtils';
-import StringUtils from '../../../utils/StringUtils';
+import { Checkbox } from 'primereact/checkbox'
+
+import AuthService from '../services/AuthService'
+import ValidatorUtils from '../../../utils/ValidatorUtils'
+import StringUtils from '../../../utils/StringUtils'
+
 import './style.css'
 
 export default function CreateUser(props) {
@@ -35,7 +37,9 @@ export default function CreateUser(props) {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [seePasswordsChecked, setSeePasswordsChecked] = useState(false)
   const [loader, setLoader] = useState(false)
+
   const msgs = useRef(null)
+
   const authService = new AuthService()
   const validatorUtils = new ValidatorUtils()
   const stringUtils = new StringUtils()
@@ -70,18 +74,18 @@ export default function CreateUser(props) {
 
     for (let [key, value] of Object.entries(user)) {
       if (!value) {
-        addInputFieldRequired(key);
+        addInputFieldRequired(key)
         valid = false
       } else {
-        clearInputFieldRequired(key);
+        clearInputFieldRequired(key)
       }
     }
 
     if (valid && !confirmPassword) {
-      addInputFieldRequired('confirmPassword');
+      addInputFieldRequired('confirmPassword')
       valid = false
     } else {
-      clearInputFieldRequired('confirmPassword');
+      clearInputFieldRequired('confirmPassword')
     }
 
     if (valid && validatorUtils.isNotEmail(user.email)) {
@@ -104,12 +108,12 @@ export default function CreateUser(props) {
   }
 
   function addInputFieldRequired(field) {
-    let capitalizedField = stringUtils.capitalizeField(field);
-    changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid');
+    let capitalizedField = stringUtils.capitalizeField(field)
+    changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid')
   }
 
   function clearInputFieldRequired(field) {
-    changeTextFieldRequired(field, '', '');
+    changeTextFieldRequired(field, '', '')
   }
 
   function changeTextFieldRequired(field, value, cssClass) {
@@ -123,9 +127,25 @@ export default function CreateUser(props) {
 
   function clearAllInputFieldsRequired() {
     for (let key of Object.keys(user)) {
-      clearInputFieldRequired(key);
+      clearInputFieldRequired(key)
     }
     clearInputFieldRequired('confirmPassword')
+  }
+
+  function handleChangeName(event) {
+    setUser({ ...user, name: event.target.value })
+  }
+
+  function handleChangeEmail(event) {
+    setUser({ ...user, email: event.target.value })
+  }
+
+  function handleChangePassword(event) {
+    setUser({ ...user, password: event.target.value })
+  }
+
+  function handleChangeConfirmPassword(event) {
+    setConfirmPassword(event.target.value)
   }
 
   function seePasswords(checked) {
@@ -135,11 +155,11 @@ export default function CreateUser(props) {
     let confirmPassword = document.getElementById('confirmPassword')
 
     if (checked) {
-      passwordCreate.type = 'text';
-      confirmPassword.type = 'text';
+      passwordCreate.type = 'text'
+      confirmPassword.type = 'text'
     } else {
-      passwordCreate.type = 'password';
-      confirmPassword.type = 'password';
+      passwordCreate.type = 'password'
+      confirmPassword.type = 'password'
     }
 
   }
@@ -159,11 +179,7 @@ export default function CreateUser(props) {
               <label htmlFor="name">Name</label>
               <div className="p-field form-input">
                 <InputText id="name"
-                  onChange={e => {
-                    setUser(prevState => {
-                      return { ...prevState, name: e.target.value }
-                    })
-                  }}
+                  onChange={handleChangeName}
                   aria-describedby="name-help" className={requiredStyle['name']} />
               </div>
               <small id="name-help" className={requiredStyle['name']}>{requiredFields['name']}</small>
@@ -177,11 +193,7 @@ export default function CreateUser(props) {
               <label htmlFor="email">E-Mail</label>
               <div className="p-field form-input">
                 <InputText id="email" type="email"
-                  onChange={e => {
-                    setUser(prevState => {
-                      return { ...prevState, email: e.target.value }
-                    })
-                  }}
+                  onChange={handleChangeEmail}
                   aria-describedby="email-help" className={requiredStyle['email']} />
               </div>
               <small id="email-help" className={requiredStyle['email']}>{requiredFields['email']}</small>
@@ -195,11 +207,7 @@ export default function CreateUser(props) {
               <label htmlFor="password">Password</label>
               <div className="p-field form-input">
                 <InputText id="password" type="password"
-                  onChange={e => {
-                    setUser(prevState => {
-                      return { ...prevState, password: e.target.value }
-                    })
-                  }}
+                  onChange={handleChangePassword}
                   aria-describedby="password-help" className={requiredStyle['password']} />
               </div>
               <small id="password-help" className={requiredStyle['password']}>{requiredFields['password']}</small>
@@ -213,9 +221,7 @@ export default function CreateUser(props) {
               <label htmlFor="confirmPassword">Confirm Password</label>
               <div className="p-field form-input">
                 <InputText id="confirmPassword" type="password"
-                  onChange={e => {
-                    setConfirmPassword(e.target.value)
-                  }}
+                  onChange={handleChangeConfirmPassword}
                   aria-describedby="confirmPassword-help" className={requiredStyle['confirmPassword']} />
               </div>
               <small id="confirmPassword-help" className={requiredStyle['confirmPassword']}>{requiredFields['confirmPassword']}</small>

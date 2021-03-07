@@ -1,7 +1,7 @@
 
 import { BehaviorSubject } from 'rxjs';
 
-const behaviorSubject = new BehaviorSubject('');
+const behaviorSubject = new BehaviorSubject('')
 
 export default class BehaviorSubjectService {
 

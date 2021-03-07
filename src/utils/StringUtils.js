@@ -2,56 +2,79 @@
 export default class StringUtils {
 
   capitalizeField(field) {
-    let capitalizeField = '';
+    let capitalizeField = ''
     for (let i = 0; i < field.length; i++) {
       if (i === 0) {
-        capitalizeField += field[i].toUpperCase();
-        continue;
+        capitalizeField += field[i].toUpperCase()
+        continue
       }
       if (field[i].toUpperCase() === field[i]) {
-        capitalizeField += ` ${field[i]}`;
+        capitalizeField += ` ${field[i]}`
       } else {
-        capitalizeField += field[i];
+        capitalizeField += field[i]
       }
     }
-    return capitalizeField;
+    return capitalizeField
   }
 
   transformLaunchDate(launchDate) {
-    let day = launchDate.substring(0, 2);
-    let month = launchDate.substring(2, 4);
-    let year = launchDate.substring(4);
-    return `${day} ${getMonthName(month)} ${year}`;
+    let day = launchDate.substring(0, 2)
+    let month = launchDate.substring(2, 4)
+    let year = launchDate.substring(4)
+    return `${day} ${getMonthName(month)} ${year}`
+  }
+
+  transformViewsNumber(viewsNumber) {
+
+    let viewsNumberReverse = reverseString(viewsNumber)
+    let viewsNumberFormat = ''
+    let threeDigits = 0
+
+    for (let index = 0; index < viewsNumberReverse.length; index++) {
+      if (threeDigits === 3) {
+        viewsNumberFormat += `,${viewsNumberReverse[index]}`
+        threeDigits = 0
+      } else {
+        viewsNumberFormat += viewsNumberReverse[index]
+      }
+      threeDigits++
+    }
+
+    return reverseString(viewsNumberFormat)
   }
 
 }
 
 function getMonthName(month) {
   if (month === '01') {
-    return 'January';
+    return 'January'
   } else if (month === '02') {
-    return 'February';
+    return 'February'
   } else if (month === '03') {
-    return 'March';
+    return 'March'
   } else if (month === '04') {
-    return 'April';
+    return 'April'
   } else if (month === '05') {
-    return 'May';
+    return 'May'
   } else if (month === '06') {
-    return 'June';
+    return 'June'
   } else if (month === '07') {
-    return 'July';
+    return 'July'
   } else if (month === '08') {
-    return 'August';
+    return 'August'
   } else if (month === '09') {
-    return 'September';
+    return 'September'
   } else if (month === '10') {
-    return 'October';
+    return 'October'
   } else if (month === '11') {
-    return 'November';
+    return 'November'
   } else if (month === '12') {
-    return 'December';
+    return 'December'
   } else {
-    return '';
+    return ''
   }
+}
+
+function reverseString(string) {
+  return `${string}`.split('').reverse().join('')
 }
