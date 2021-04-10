@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react'
 
 import { InputText } from 'primereact/inputtext'
@@ -15,7 +14,6 @@ import ValidatorUtils from '../../../utils/ValidatorUtils'
 import './style.css'
 
 export default function CreateEditMusic(props) {
-
   const [music, setMusic] = useState({})
 
   const [requiredStyle, setRequiredStyle] = useState({
@@ -54,7 +52,6 @@ export default function CreateEditMusic(props) {
   }
 
   function validFields() {
-
     let valid = true
 
     for (let [key, value] of Object.entries(music)) {
@@ -68,8 +65,10 @@ export default function CreateEditMusic(props) {
 
     if (valid && validatorUtils.isNotLaunchDateValid(music.launchDate)) {
       sendMessage({
-        severity: 'error', summary: 'Error',
-        detail: 'This Launch Date does not exist!', sticky: true
+        severity: 'error',
+        summary: 'Error',
+        detail: 'This Launch Date does not exist!',
+        sticky: true
       })
       valid = false
     }
@@ -79,14 +78,18 @@ export default function CreateEditMusic(props) {
 
   function addInputFieldRequired(field) {
     let capitalizedField = stringUtils.capitalizeField(field)
-    changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid')
+    changeTextFieldRequired(
+      field,
+      `${capitalizedField} is required!`,
+      'p-invalid'
+    )
   }
 
   function changeTextFieldRequired(field, value, cssClass) {
-    setRequiredFields(prevState => {
+    setRequiredFields((prevState) => {
       return { ...prevState, [`${field}`]: value }
     })
-    setRequiredStyle(prevState => {
+    setRequiredStyle((prevState) => {
       return { ...prevState, [`${field}`]: cssClass }
     })
   }
@@ -126,47 +129,61 @@ export default function CreateEditMusic(props) {
 
   function editMusic() {
     setLoader(true)
-    musicService.edit(music).then(() => {
-      setLoader(false)
-      sendMessage({
-        severity: 'success', summary: 'Success',
-        detail: 'Music edited successfully!', sticky: true
+    musicService
+      .edit(music)
+      .then(() => {
+        setLoader(false)
+        sendMessage({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Music edited successfully!',
+          sticky: true
+        })
+        props.conclusion()
       })
-      props.conclusion()
-    }).catch(error => {
-      setLoader(false)
-      sendMessage({
-        severity: 'error', summary: 'Error',
-        detail: error.response.data.message, sticky: true
+      .catch((error) => {
+        setLoader(false)
+        sendMessage({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          sticky: true
+        })
       })
-    })
   }
 
   function saveMusic() {
     setLoader(true)
-    musicService.save(music).then(() => {
-      setLoader(false)
-      sendMessage({
-        severity: 'success', summary: 'Success',
-        detail: 'Music added successfully!', sticky: true
+    musicService
+      .save(music)
+      .then(() => {
+        setLoader(false)
+        sendMessage({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Music added successfully!',
+          sticky: true
+        })
+        props.conclusion()
+        setMusic({
+          id: null,
+          title: '',
+          artist: '',
+          launchDate: '',
+          duration: '',
+          viewsNumber: null,
+          feat: false
+        })
       })
-      props.conclusion()
-      setMusic({
-        id: null,
-        title: '',
-        artist: '',
-        launchDate: '',
-        duration: '',
-        viewsNumber: null,
-        feat: false
+      .catch((error) => {
+        setLoader(false)
+        sendMessage({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          sticky: true
+        })
       })
-    }).catch(error => {
-      setLoader(false)
-      sendMessage({
-        severity: 'error', summary: 'Error',
-        detail: error.response.data.message, sticky: true
-      })
-    })
   }
 
   function saveOrEditMusic() {
@@ -181,21 +198,27 @@ export default function CreateEditMusic(props) {
 
   return (
     <div>
-
       <div className="card">
-
         <Messages ref={msgs} />
 
         <div className="p-grid">
           <div className="p-col-12">
             <div className="p-fluid">
-              <label htmlFor="title" className="p-d-block">Title</label>
+              <label htmlFor="title" className="p-d-block">
+                Title
+              </label>
               <div className="p-field form-input">
-                <InputText id="title" value={music.title || ''}
+                <InputText
+                  id="title"
+                  value={music.title || ''}
                   onChange={handleChangeTitle}
-                  aria-describedby="title-help" className={requiredStyle['title']} />
+                  aria-describedby="title-help"
+                  className={requiredStyle['title']}
+                />
               </div>
-              <small id="title-help" className={requiredStyle['title']}>{requiredFields['title']}</small>
+              <small id="title-help" className={requiredStyle['title']}>
+                {requiredFields['title']}
+              </small>
             </div>
           </div>
         </div>
@@ -203,56 +226,93 @@ export default function CreateEditMusic(props) {
         <div className="p-grid">
           <div className="p-col-12">
             <div className="p-fluid form-field">
-              <label htmlFor="artist" className="p-d-block">Artist</label>
+              <label htmlFor="artist" className="p-d-block">
+                Artist
+              </label>
               <div className="p-field form-input">
-                <InputText id="artist" value={music.artist || ''}
+                <InputText
+                  id="artist"
+                  value={music.artist || ''}
                   onChange={handleChangeArtist}
-                  aria-describedby="artist-help" className={requiredStyle['artist']} />
+                  aria-describedby="artist-help"
+                  className={requiredStyle['artist']}
+                />
               </div>
-              <small id="artist-help" className={requiredStyle['artist']}>{requiredFields['artist']}</small>
+              <small id="artist-help" className={requiredStyle['artist']}>
+                {requiredFields['artist']}
+              </small>
             </div>
           </div>
         </div>
 
         <div className="p-grid">
-
           <div className="p-col-6">
             <div className="p-fluid form-field">
-              <label htmlFor="launchDate" className="p-d-block">Launch Date</label>
+              <label htmlFor="launchDate" className="p-d-block">
+                Launch Date
+              </label>
               <div className="p-field form-input">
-                <InputMask id="launchDate" value={music.launchDate || ''} mask="99/99/9999"
+                <InputMask
+                  id="launchDate"
+                  value={music.launchDate || ''}
+                  mask="99/99/9999"
                   onChange={handleChangeLaunchDate}
-                  aria-describedby="launchDate-help" className={requiredStyle['launchDate']} />
+                  aria-describedby="launchDate-help"
+                  className={requiredStyle['launchDate']}
+                />
               </div>
-              <small id="launchDate-help" className={requiredStyle['launchDate']}>{requiredFields['launchDate']}</small>
+              <small
+                id="launchDate-help"
+                className={requiredStyle['launchDate']}
+              >
+                {requiredFields['launchDate']}
+              </small>
             </div>
           </div>
 
           <div className="p-col-6">
             <div className="p-fluid form-field">
-              <label htmlFor="duration" className="p-d-block">Duration</label>
+              <label htmlFor="duration" className="p-d-block">
+                Duration
+              </label>
               <div className="p-field form-input">
-                <InputMask id="duration" value={music.duration || ''} mask="99:99"
+                <InputMask
+                  id="duration"
+                  value={music.duration || ''}
+                  mask="99:99"
                   onChange={handleChangeDuration}
-                  aria-describedby="duration-help" className={requiredStyle['duration']} />
+                  aria-describedby="duration-help"
+                  className={requiredStyle['duration']}
+                />
               </div>
-              <small id="duration-help" className={requiredStyle['duration']}>{requiredFields['duration']}</small>
+              <small id="duration-help" className={requiredStyle['duration']}>
+                {requiredFields['duration']}
+              </small>
             </div>
           </div>
-
         </div>
 
         <div className="p-grid">
-
           <div className="p-col-6">
             <div className="p-fluid form-field">
-              <label htmlFor="viewsNumber" className="p-d-block">Views Number</label>
+              <label htmlFor="viewsNumber" className="p-d-block">
+                Views Number
+              </label>
               <div className="p-field form-input">
-                <InputNumber id="viewsNumber" value={music.viewsNumber || null}
+                <InputNumber
+                  id="viewsNumber"
+                  value={music.viewsNumber || null}
                   onChange={handleChangeViewsNumber}
-                  aria-describedby="viewsNumber-help" className={requiredStyle['viewsNumber']} />
+                  aria-describedby="viewsNumber-help"
+                  className={requiredStyle['viewsNumber']}
+                />
               </div>
-              <small id="viewsNumber-help" className={requiredStyle['viewsNumber']}>{requiredFields['viewsNumber']}</small>
+              <small
+                id="viewsNumber-help"
+                className={requiredStyle['viewsNumber']}
+              >
+                {requiredFields['viewsNumber']}
+              </small>
             </div>
           </div>
 
@@ -261,35 +321,49 @@ export default function CreateEditMusic(props) {
               <label>Feat</label>
               <div className="p-formgroup-inline form-radio">
                 <div className="p-field-checkbox">
-                  <RadioButton inputId="feat-yes" name="feat-yes" value={true}
+                  <RadioButton
+                    inputId="feat-yes"
+                    name="feat-yes"
+                    value={true}
                     onChange={handleChangeFeat}
-                    checked={music.feat} />
+                    checked={music.feat}
+                  />
                   <label htmlFor="feat-yes">Yes</label>
                 </div>
                 <div className="p-field-checkbox">
-                  <RadioButton inputId="feat-no" name="feat-no" value={false}
+                  <RadioButton
+                    inputId="feat-no"
+                    name="feat-no"
+                    value={false}
                     onChange={handleChangeFeat}
-                    checked={!music.feat} />
+                    checked={!music.feat}
+                  />
                   <label htmlFor="feat-no">No</label>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
 
       <div className="p-grid">
         <div className="p-col-2">
           <div className="form-button">
-            <Button onClick={saveOrEditMusic} label="Save" className="p-button-success"
-              icon="pi pi-save" />
+            <Button
+              onClick={saveOrEditMusic}
+              label="Save"
+              className="p-button-success"
+              icon="pi pi-save"
+            />
           </div>
         </div>
-        {loader && <div className="loader" style={{ marginTop: '20px', marginLeft: '20px' }}></div>}
+        {loader && (
+          <div
+            className="loader"
+            style={{ marginTop: '20px', marginLeft: '20px' }}
+          ></div>
+        )}
       </div>
-
     </div>
   )
 }

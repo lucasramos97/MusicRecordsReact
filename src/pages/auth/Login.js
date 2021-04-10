@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -17,7 +16,6 @@ import { AUTHENTICATED_ERROR } from '../../utils/Consts'
 import './style.css'
 
 export default function Login() {
-
   const [user, setUser] = useState({
     email: '',
     password: ''
@@ -50,18 +48,22 @@ export default function Login() {
   }, [])
 
   function listenMessages() {
-    behaviorSubjectService.listenMessage().subscribe(message => {
+    behaviorSubjectService.listenMessage().subscribe((message) => {
       if (message.startsWith(AUTHENTICATED_ERROR)) {
         let errorMessage = message.substr(AUTHENTICATED_ERROR.length)
         if (errorMessage !== 'undefined') {
           sendMessage({
-            severity: 'error', summary: 'Error',
-            detail: errorMessage, sticky: true
+            severity: 'error',
+            summary: 'Error',
+            detail: errorMessage,
+            sticky: true
           })
         } else {
           sendMessage({
-            severity: 'error', summary: 'Error',
-            detail: 'Server not reached!', sticky: true
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Server not reached!',
+            sticky: true
           })
         }
       }
@@ -71,8 +73,10 @@ export default function Login() {
   function conclusionCreateUser() {
     setDisplayCreateUser(false)
     sendMessage({
-      severity: 'success', summary: 'Success',
-      detail: 'User created successfully!', sticky: true
+      severity: 'success',
+      summary: 'Success',
+      detail: 'User created successfully!',
+      sticky: true
     })
   }
 
@@ -85,28 +89,35 @@ export default function Login() {
     if (validFields()) {
       setLoader(true)
       authService.logout()
-      authService.login(user).then(res => {
-        setLoader(false)
-        authService.setUserEmail(user.email)
-        authService.setToken(res.data.message)
-        authService.setUsername(res.data.username)
-        authService.setExpiredToken(false)
-        history.push('/musics')
-      }).catch(error => {
-        setLoader(false)
-        let errorMessage = error.response.data.message
-        if (error.response.status !== 0) {
-          sendMessage({
-            severity: 'error', summary: 'Error',
-            detail: errorMessage, sticky: true
-          })
-        } else {
-          sendMessage({
-            severity: 'error', summary: 'Error',
-            detail: 'Server not reached!', sticky: true
-          })
-        }
-      })
+      authService
+        .login(user)
+        .then((res) => {
+          setLoader(false)
+          authService.setUserEmail(user.email)
+          authService.setToken(res.data.message)
+          authService.setUsername(res.data.username)
+          authService.setExpiredToken(false)
+          history.push('/musics')
+        })
+        .catch((error) => {
+          setLoader(false)
+          let errorMessage = error.response.data.message
+          if (error.response.status !== 0) {
+            sendMessage({
+              severity: 'error',
+              summary: 'Error',
+              detail: errorMessage,
+              sticky: true
+            })
+          } else {
+            sendMessage({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Server not reached!',
+              sticky: true
+            })
+          }
+        })
     }
   }
 
@@ -124,8 +135,10 @@ export default function Login() {
 
     if (valid && validatorUtils.isNotEmail(user.email)) {
       sendMessage({
-        severity: 'error', summary: 'Error',
-        detail: 'Valid E-Mail format is required!', sticky: true
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Valid E-Mail format is required!',
+        sticky: true
       })
       valid = false
     }
@@ -135,7 +148,11 @@ export default function Login() {
 
   function addInputFieldRequired(field) {
     let capitalizedField = stringUtils.capitalizeField(field)
-    changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid')
+    changeTextFieldRequired(
+      field,
+      `${capitalizedField} is required!`,
+      'p-invalid'
+    )
   }
 
   function clearInputFieldRequired(field) {
@@ -143,10 +160,10 @@ export default function Login() {
   }
 
   function changeTextFieldRequired(field, value, cssClass) {
-    setRequiredFields(prevState => {
+    setRequiredFields((prevState) => {
       return { ...prevState, [`${field}`]: value }
     })
-    setRequiredStyle(prevState => {
+    setRequiredStyle((prevState) => {
       return { ...prevState, [`${field}`]: cssClass }
     })
   }
@@ -162,31 +179,38 @@ export default function Login() {
   return (
     <div>
       <div className="container">
-
         <div style={{ width: '750px' }}>
           <Messages ref={msgs} />
         </div>
 
         <div className="box">
-
-          <h1 className="title" style={{ marginTop: '20px' }}>Login</h1>
+          <h1 className="title" style={{ marginTop: '20px' }}>
+            Login
+          </h1>
 
           <div className="card">
-
             <div className="p-grid grid">
               <div className="p-col-12">
                 <div className="p-fluid">
-                  <label htmlFor="email" className="p-d-block">E-Mail</label>
+                  <label htmlFor="email" className="p-d-block">
+                    E-Mail
+                  </label>
                   <div className="p-field form-input">
-                    <InputText id="email" type="email"
-                      onChange={e => {
-                        setUser(prevState => {
+                    <InputText
+                      id="email"
+                      type="email"
+                      onChange={(e) => {
+                        setUser((prevState) => {
                           return { ...prevState, email: e.target.value }
                         })
                       }}
-                      aria-describedby="email-help" className={requiredStyle['email']} />
+                      aria-describedby="email-help"
+                      className={requiredStyle['email']}
+                    />
                   </div>
-                  <small id="email-help" className={requiredStyle['email']}>{requiredFields['email']}</small>
+                  <small id="email-help" className={requiredStyle['email']}>
+                    {requiredFields['email']}
+                  </small>
                 </div>
               </div>
             </div>
@@ -194,44 +218,66 @@ export default function Login() {
             <div className="p-grid grid">
               <div className="p-col-12">
                 <div className="p-fluid form-field">
-                  <label htmlFor="password" className="p-d-block">Password</label>
+                  <label htmlFor="password" className="p-d-block">
+                    Password
+                  </label>
                   <div className="p-field form-input">
-                    <InputText id="passwordLogin" type="password"
-                      onChange={e => {
-                        setUser(prevState => {
+                    <InputText
+                      id="passwordLogin"
+                      type="password"
+                      onChange={(e) => {
+                        setUser((prevState) => {
                           return { ...prevState, password: e.target.value }
                         })
                       }}
-                      aria-describedby="password-help" className={requiredStyle['password']} />
+                      aria-describedby="password-help"
+                      className={requiredStyle['password']}
+                    />
                   </div>
-                  <small id="password-help" className={requiredStyle['password']}>{requiredFields['password']}</small>
+                  <small
+                    id="password-help"
+                    className={requiredStyle['password']}
+                  >
+                    {requiredFields['password']}
+                  </small>
                 </div>
               </div>
             </div>
-
           </div>
 
           <div className="link">
-            <a href="#/" onClick={showCreateUser}>Don't have an account yet?</a>
+            <a href="#/" onClick={showCreateUser}>
+              Don't have an account yet?
+            </a>
           </div>
 
           <div className="p-grid" style={{ marginTop: '10px' }}>
             <div className="p-col-5">
               <div className="form-button button">
-                <Button onClick={loginUser} label="Login" disabled={loader} icon="pi pi-sign-in" iconPos="right" />
+                <Button
+                  onClick={loginUser}
+                  label="Login"
+                  disabled={loader}
+                  icon="pi pi-sign-in"
+                  iconPos="right"
+                />
               </div>
             </div>
-            {loader && <div className="loader" style={{ marginTop: '20px' }}></div>}
+            {loader && (
+              <div className="loader" style={{ marginTop: '20px' }}></div>
+            )}
           </div>
-
         </div>
       </div>
 
-      <Dialog header="Create User" visible={displayCreateUser} style={{ width: '35vw' }}
-        onHide={hideCreateEditMusic}>
+      <Dialog
+        header="Create User"
+        visible={displayCreateUser}
+        style={{ width: '35vw' }}
+        onHide={hideCreateEditMusic}
+      >
         <CreateUser conclusion={conclusionCreateUser} />
       </Dialog>
-
     </div>
   )
 }

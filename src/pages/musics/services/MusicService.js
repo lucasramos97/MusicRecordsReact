@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 
 import AuthService from '../../auth/services/AuthService'
@@ -7,15 +6,17 @@ const urlBase = 'http://localhost:8080/musics'
 const api = axios.create()
 const authService = new AuthService()
 
-api.interceptors.request.use(req => {
-  req.headers.Authorization = `Bearer ${authService.getToken()}`
-  return req
-}, error => {
-  return Promise.reject(error)
-})
+api.interceptors.request.use(
+  (req) => {
+    req.headers.Authorization = `Bearer ${authService.getToken()}`
+    return req
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
 export default class MusicService {
-
   getAllMusics(page) {
     return api.get(`${urlBase}?page=${page}&size=5`)
   }
@@ -43,5 +44,4 @@ export default class MusicService {
   recoverDeletedMusics(musics) {
     return api.post(`${urlBase}/recover`, musics)
   }
-
 }

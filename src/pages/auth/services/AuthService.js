@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 
 const urlBase = 'http://localhost:8080/auth'
@@ -10,7 +9,6 @@ const keyUsername = 'username'
 const keyExpiredToken = 'expiredToken'
 
 export default class AuthService {
-
   login(user) {
     return api.post(`${urlBase}/login`, user)
   }
@@ -75,5 +73,4 @@ export default class AuthService {
     this.setUserEmail('')
     this.setExpiredToken(true)
   }
-
 }

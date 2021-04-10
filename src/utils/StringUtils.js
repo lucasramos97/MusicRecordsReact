@@ -1,6 +1,4 @@
-
 export default class StringUtils {
-
   capitalizeField(field) {
     let capitalizeField = ''
     for (let i = 0; i < field.length; i++) {
@@ -25,7 +23,6 @@ export default class StringUtils {
   }
 
   transformViewsNumber(viewsNumber) {
-
     let viewsNumberReverse = reverseString(viewsNumber)
     let viewsNumberFormat = ''
     let threeDigits = 0
@@ -42,7 +39,6 @@ export default class StringUtils {
 
     return reverseString(viewsNumberFormat)
   }
-
 }
 
 function getMonthName(month) {

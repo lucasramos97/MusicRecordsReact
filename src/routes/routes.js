@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
@@ -8,7 +7,6 @@ import DeletedMusics from '../pages/musics/deteledMusic/DeteledMusic'
 import AuthenticationGuard from './AuthenticationGuard'
 
 export default function Routes() {
-
   return (
     <BrowserRouter>
       <Switch>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react'
 
 import { Messages } from 'primereact/messages'
@@ -13,7 +12,6 @@ import StringUtils from '../../../utils/StringUtils'
 import './style.css'
 
 export default function CreateUser(props) {
-
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -56,16 +54,21 @@ export default function CreateUser(props) {
   function createUser() {
     if (validFields()) {
       setLoader(true)
-      authService.create(user).then(() => {
-        setLoader(false)
-        props.conclusion()
-      }).catch(error => {
-        setLoader(false)
-        sendMessage({
-          severity: 'error', summary: 'Error',
-          detail: error.response.data.message, sticky: true
+      authService
+        .create(user)
+        .then(() => {
+          setLoader(false)
+          props.conclusion()
         })
-      })
+        .catch((error) => {
+          setLoader(false)
+          sendMessage({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.response.data.message,
+            sticky: true
+          })
+        })
     }
   }
 
@@ -90,16 +93,20 @@ export default function CreateUser(props) {
 
     if (valid && validatorUtils.isNotEmail(user.email)) {
       sendMessage({
-        severity: 'error', summary: 'Error',
-        detail: 'Valid E-Mail format is required!', sticky: true
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Valid E-Mail format is required!',
+        sticky: true
       })
       valid = false
     }
 
     if (valid && confirmPassword !== user.password) {
       sendMessage({
-        severity: 'error', summary: 'Error',
-        detail: 'Passwords must be the same!', sticky: true
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Passwords must be the same!',
+        sticky: true
       })
       valid = false
     }
@@ -109,7 +116,11 @@ export default function CreateUser(props) {
 
   function addInputFieldRequired(field) {
     let capitalizedField = stringUtils.capitalizeField(field)
-    changeTextFieldRequired(field, `${capitalizedField} is required!`, 'p-invalid')
+    changeTextFieldRequired(
+      field,
+      `${capitalizedField} is required!`,
+      'p-invalid'
+    )
   }
 
   function clearInputFieldRequired(field) {
@@ -117,10 +128,10 @@ export default function CreateUser(props) {
   }
 
   function changeTextFieldRequired(field, value, cssClass) {
-    setRequiredFields(prevState => {
+    setRequiredFields((prevState) => {
       return { ...prevState, [`${field}`]: value }
     })
-    setRequiredStyle(prevState => {
+    setRequiredStyle((prevState) => {
       return { ...prevState, [`${field}`]: cssClass }
     })
   }
@@ -149,7 +160,6 @@ export default function CreateUser(props) {
   }
 
   function seePasswords(checked) {
-
     setSeePasswordsChecked(checked)
     let passwordCreate = document.getElementById('password')
     let confirmPassword = document.getElementById('confirmPassword')
@@ -161,14 +171,11 @@ export default function CreateUser(props) {
       passwordCreate.type = 'password'
       confirmPassword.type = 'password'
     }
-
   }
 
   return (
     <div>
-
       <div className="card">
-
         <div style={{ width: '400px' }}>
           <Messages ref={msgs} />
         </div>
@@ -178,11 +185,16 @@ export default function CreateUser(props) {
             <div className="p-fluid">
               <label htmlFor="name">Name</label>
               <div className="p-field form-input">
-                <InputText id="name"
+                <InputText
+                  id="name"
                   onChange={handleChangeName}
-                  aria-describedby="name-help" className={requiredStyle['name']} />
+                  aria-describedby="name-help"
+                  className={requiredStyle['name']}
+                />
               </div>
-              <small id="name-help" className={requiredStyle['name']}>{requiredFields['name']}</small>
+              <small id="name-help" className={requiredStyle['name']}>
+                {requiredFields['name']}
+              </small>
             </div>
           </div>
         </div>
@@ -192,11 +204,17 @@ export default function CreateUser(props) {
             <div className="p-fluid">
               <label htmlFor="email">E-Mail</label>
               <div className="p-field form-input">
-                <InputText id="email" type="email"
+                <InputText
+                  id="email"
+                  type="email"
                   onChange={handleChangeEmail}
-                  aria-describedby="email-help" className={requiredStyle['email']} />
+                  aria-describedby="email-help"
+                  className={requiredStyle['email']}
+                />
               </div>
-              <small id="email-help" className={requiredStyle['email']}>{requiredFields['email']}</small>
+              <small id="email-help" className={requiredStyle['email']}>
+                {requiredFields['email']}
+              </small>
             </div>
           </div>
         </div>
@@ -206,11 +224,17 @@ export default function CreateUser(props) {
             <div className="p-fluid">
               <label htmlFor="password">Password</label>
               <div className="p-field form-input">
-                <InputText id="password" type="password"
+                <InputText
+                  id="password"
+                  type="password"
                   onChange={handleChangePassword}
-                  aria-describedby="password-help" className={requiredStyle['password']} />
+                  aria-describedby="password-help"
+                  className={requiredStyle['password']}
+                />
               </div>
-              <small id="password-help" className={requiredStyle['password']}>{requiredFields['password']}</small>
+              <small id="password-help" className={requiredStyle['password']}>
+                {requiredFields['password']}
+              </small>
             </div>
           </div>
         </div>
@@ -220,35 +244,54 @@ export default function CreateUser(props) {
             <div className="p-fluid">
               <label htmlFor="confirmPassword">Confirm Password</label>
               <div className="p-field form-input">
-                <InputText id="confirmPassword" type="password"
+                <InputText
+                  id="confirmPassword"
+                  type="password"
                   onChange={handleChangeConfirmPassword}
-                  aria-describedby="confirmPassword-help" className={requiredStyle['confirmPassword']} />
+                  aria-describedby="confirmPassword-help"
+                  className={requiredStyle['confirmPassword']}
+                />
               </div>
-              <small id="confirmPassword-help" className={requiredStyle['confirmPassword']}>{requiredFields['confirmPassword']}</small>
+              <small
+                id="confirmPassword-help"
+                className={requiredStyle['confirmPassword']}
+              >
+                {requiredFields['confirmPassword']}
+              </small>
             </div>
           </div>
         </div>
-
       </div>
 
       <div className="p-grid">
         <div className="p-col-5">
           <div className="form-button">
-            <Button onClick={createUser} label="Create User" disabled={loader} className="p-button-success" icon="pi pi-save" />
+            <Button
+              onClick={createUser}
+              label="Create User"
+              disabled={loader}
+              className="p-button-success"
+              icon="pi pi-save"
+            />
           </div>
         </div>
-        <div className="p-col-2" style={{ marginTop: '12px' }} >
-          {loader && <div className="loader" ></div>}
+        <div className="p-col-2" style={{ marginTop: '12px' }}>
+          {loader && <div className="loader"></div>}
         </div>
         <div className="p-col-5">
           <div className="p-field-checkbox field-checkbox">
-            <label htmlFor="seePasswords" className="label-checkbox">See Passwords</label>
-            <Checkbox inputId="seePasswords" checked={seePasswordsChecked} onChange={e => seePasswords(e.checked)} className="icon-checkbox" />
+            <label htmlFor="seePasswords" className="label-checkbox">
+              See Passwords
+            </label>
+            <Checkbox
+              inputId="seePasswords"
+              checked={seePasswordsChecked}
+              onChange={(e) => seePasswords(e.checked)}
+              className="icon-checkbox"
+            />
           </div>
         </div>
       </div>
-
     </div>
   )
-
 }
